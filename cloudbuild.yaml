@@ -18,3 +18,5 @@ images:
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  /Assignment 1 Files/cloudbuild.yaml
+
