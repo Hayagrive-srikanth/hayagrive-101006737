@@ -18,4 +18,15 @@ images:
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+    - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'hayagrive-101006737',
+        '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA',
+        '--region', 'us-central1',
+        '--platform', 'managed',
+        '--allow-unauthenticated'
+      ]
+
 
