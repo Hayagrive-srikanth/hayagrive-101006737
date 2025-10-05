@@ -1,0 +1,20 @@
+# Builds a Docker image and pushes it to Artifact Registry (us-central1)
+# Image name pattern: us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
