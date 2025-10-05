@@ -1,6 +1,5 @@
-# Builds a Docker image and pushes it to Artifact Registry (us-central1)
-# Image name pattern: us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
 steps:
+  # 1) Build image
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -8,25 +7,27 @@ steps:
       - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
       - .
 
+  # 2) Push image
   - name: gcr.io/cloud-builders/docker
     args:
       - push
       - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+
+  # 3) Deploy to Cloud Run  <-- THIS MUST BE UNDER steps, not under options
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - hayagrive-101006737            # use your exact service name
+      - --image=us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --quiet
 
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-    - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    entrypoint: gcloud
-    args:
-      [
-        'run', 'deploy', 'hayagrive-101006737',
-        '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/hayagrive-101006737/app:$COMMIT_SHA',
-        '--region', 'us-central1',
-        '--platform', 'managed',
-        '--allow-unauthenticated'
-      ]
-
-
